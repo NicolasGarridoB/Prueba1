@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - Pastelería Mil Sabores</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1 class="logo-text">Mil Sabores</h1>
+                    <span class="logo-subtitle">50 años de tradición</span>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Inicio</a></li>
+                    <li class="nav-item"><a href="index.html#productos" class="nav-link">Productos</a></li>
+                    <li class="nav-item"><a href="index.html#nosotros" class="nav-link">Nosotros</a></li>
+                    <li class="nav-item"><a href="index.html#contacto" class="nav-link">Contacto</a></li>
+                    <li class="nav-item"><a href="login.html" class="nav-link" id="loginBtn">Iniciar Sesión</a></li>
+                    <li class="nav-item"><a href="carrito.html" class="nav-link cart-link active" id="cartBtn"><i class="fas fa-shopping-cart"></i> <span id="cartCount">0</span></a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="cart-main">
+        <div class="container">
+            <div class="cart-header">
+                <h1><i class="fas fa-shopping-cart"></i> Tu Carrito de Compras</h1>
+                <p>Revisa tus productos seleccionados antes de proceder al pago</p>
+            </div>
+
+            <div class="cart-page-content">
+                <div class="cart-items-section">
+                    <div class="cart-items-header">
+                        <h2>Productos en tu carrito</h2>
+                        <button class="clear-cart-btn" onclick="clearCart()">
+                            <i class="fas fa-trash"></i> Vaciar carrito
+                        </button>
+                    </div>
+                    
+                    <div id="cartItemsContainer" class="cart-items-container">
+                        <!-- Los productos del carrito se cargarán aquí -->
+                    </div>
+                    
+                    <div class="continue-shopping">
+                        <a href="index.html#productos" class="continue-btn">
+                            <i class="fas fa-arrow-left"></i> Continuar Comprando
+                        </a>
+                    </div>
+                </div>
+
+                <div class="cart-summary-section">
+                    <div class="cart-summary-card">
+                        <h3>Resumen del Pedido</h3>
+                        
+                        <div class="summary-line">
+                            <span>Subtotal:</span>
+                            <span>$<span id="subtotal">0</span></span>
+                        </div>
+                        
+                        <div class="summary-line discount-line" id="discountLine" style="display: none;">
+                            <span>Descuento:</span>
+                            <span class="discount-amount">-$<span id="discountAmount">0</span></span>
+                        </div>
+                        
+                        <div class="summary-line delivery-line">
+                            <span>Envío:</span>
+                            <span>Gratis</span>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="summary-line total-line">
+                            <span><strong>Total:</strong></span>
+                            <span><strong>$<span id="total">0</span></strong></span>
+                        </div>
+                        
+                        <div class="user-info" id="userInfo" style="display: none;">
+                            <h4>Tu información:</h4>
+                            <p id="userDetails"></p>
+                            <div id="userDiscounts"></div>
+                        </div>
+                        
+                        <div class="checkout-actions">
+                            <button class="checkout-btn" onclick="proceedToCheckout()" id="checkoutBtn">
+                                <i class="fas fa-credit-card"></i> Proceder al Pago
+                            </button>
+                            
+                            <div class="auth-prompt" id="authPrompt">
+                                <p>Para proceder al pago, necesitas:</p>
+                                <div class="auth-buttons">
+                                    <a href="login.html" class="auth-link login-link">
+                                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                                    </a>
+                                    <a href="registro.html" class="auth-link register-link">
+                                        <i class="fas fa-user-plus"></i> Crear Cuenta
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-security">
+                            <i class="fas fa-shield-alt"></i>
+                            <small>Compra 100% segura y protegida</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Cupones de descuento -->
+                    <div class="coupon-section">
+                        <h4>¿Tienes un cupón de descuento?</h4>
+                        <div class="coupon-input">
+                            <input type="text" id="couponCode" placeholder="Código de cupón">
+                            <button onclick="applyCoupon()">Aplicar</button>
+                        </div>
+                        <div class="coupon-suggestions">
+                            <small>Códigos disponibles: FELICES50</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Productos recomendados -->
+            <div class="recommended-section" id="recommendedSection">
+                <h2>Te puede interesar también</h2>
+                <div class="recommended-products" id="recommendedProducts">
+                    <!-- Productos recomendados se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de pago simulado -->
+    <div id="paymentModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('paymentModal').style.display='none'">&times;</span>
+            <h2>Pago Seguro</h2>
+            <p>Ingresa los datos de pago (simulado)</p>
+            <form id="paymentForm">
+                <div class="form-row">
+                    <label>Número de tarjeta</label>
+                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                </div>
+                <div class="form-row">
+                    <label>Nombre en la tarjeta</label>
+                    <input type="text" id="cardName" placeholder="Nombre completo" required>
+                </div>
+                <div class="form-row two-cols">
+                    <div>
+                        <label>Expiración</label>
+                        <input type="text" id="cardExp" placeholder="MM/AA" required>
+                    </div>
+                    <div>
+                        <label>CVV</label>
+                        <input type="text" id="cardCvv" placeholder="123" required>
+                    </div>
+                </div>
+                <div style="text-align:right;margin-top:12px;">
+                    <button type="submit" class="checkout-btn">Pagar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Pastelería Mil Sabores</h3>
+                    <p>50 años endulzando momentos especiales</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="index.html#productos">Productos</a></li>
+                        <li><a href="index.html#nosotros">Nosotros</a></li>
+                        <li><a href="index.html#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Síguenos</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Pastelería Mil Sabores. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Inicialización específica para la página de carrito
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCartFromStorage();
+            renderCartPage();
+            updateCartDisplay();
+            updateUserInfo();
+            loadRecommendedProducts();
+        });
+
+        function renderCartPage() {
+            const cartContainer = document.getElementById('cartItemsContainer');
+            const subtotalEl = document.getElementById('subtotal');
+            const discountAmountEl = document.getElementById('discountAmount');
+            const discountLineEl = document.getElementById('discountLine');
+            const totalEl = document.getElementById('total');
+
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart empty-cart-icon"></i>
+                        <h3>Tu carrito está vacío</h3>
+                        <p>¡Descubre nuestros deliciosos productos y agrega algunos a tu carrito!</p>
+                        <a href="index.html#productos" class="browse-products-btn">
+                            <i class="fas fa-cake"></i> Ver Productos
+                        </a>
+                    </div>
+                `;
+                subtotalEl.textContent = '0';
+                totalEl.textContent = '0';
+                discountLineEl.style.display = 'none';
+                document.getElementById('checkoutBtn').disabled = true;
+                return;
+            }
+
+            cartContainer.innerHTML = cart.map((item, index) => `
+                <div class="cart-item-card">
+                    <div class="item-image">
+                        <img src="${item.image}" alt="${item.name}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;">
+                    </div>
+                    <div class="item-details">
+                        <h4>${item.name}</h4>
+                        <p class="item-price">$${item.price.toLocaleString('es-CL')} c/u</p>
+                        ${item.customMessage ? `<p class="custom-message"><i class="fas fa-comment"></i> "${item.customMessage}"</p>` : ''}
+                    </div>
+                    <div class="item-quantity">
+                        <label>Cantidad:</label>
+                        <div class="quantity-controls">
+                            <button onclick="updateItemQuantity(${index}, -1)">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button onclick="updateItemQuantity(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="item-total">
+                        <span class="item-total-price">$${(item.price * item.quantity).toLocaleString('es-CL')}</span>
+                        <button class="remove-item-btn" onclick="removeFromCart(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Calcular totales
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const discountData = calculateDiscount(subtotal);
+            const total = subtotal - discountData.amount;
+
+            subtotalEl.textContent = subtotal.toLocaleString('es-CL');
+            totalEl.textContent = total.toLocaleString('es-CL');
+
+            if (discountData.amount > 0) {
+                discountAmountEl.textContent = discountData.amount.toLocaleString('es-CL');
+                discountLineEl.style.display = 'flex';
+            } else {
+                discountLineEl.style.display = 'none';
+            }
+
+            document.getElementById('checkoutBtn').disabled = false;
+        }
+
+        function updateItemQuantity(index, change) {
+            if (cart[index]) {
+                cart[index].quantity = Math.max(1, cart[index].quantity + change);
+                saveCartToStorage();
+                renderCartPage();
+                updateCartDisplay();
+            }
+        }
+
+        function clearCart() {
+            if (confirm('¿Estás seguro de que quieres vaciar tu carrito?')) {
+                cart = [];
+                saveCartToStorage();
+                renderCartPage();
+                updateCartDisplay();
+            }
+        }
+
+        function updateUserInfo() {
+            const userInfo = document.getElementById('userInfo');
+            const userDetails = document.getElementById('userDetails');
+            const userDiscounts = document.getElementById('userDiscounts');
+            const authPrompt = document.getElementById('authPrompt');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            if (user) {
+                userInfo.style.display = 'block';
+                authPrompt.style.display = 'none';
+                
+                userDetails.textContent = `${user.name || user.email}`;
+                
+                if (user.discounts && user.discounts.length > 0) {
+                    userDiscounts.innerHTML = '<strong>Tus descuentos activos:</strong><br>' + 
+                        user.discounts.map(d => `• ${d.description}`).join('<br>');
+                } else {
+                    userDiscounts.innerHTML = '';
+                }
+            } else {
+                userInfo.style.display = 'none';
+                authPrompt.style.display = 'block';
+                checkoutBtn.style.display = 'none';
+            }
+        }
+
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+            if (!user) {
+                alert('Debes iniciar sesión para realizar una compra');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Abrir modal de pago simulado
+            const paymentModal = document.getElementById('paymentModal');
+            if (paymentModal) {
+                paymentModal.style.display = 'block';
+            } else {
+                window.location.href = 'pedido.html';
+            }
+        }
+
+        function applyCoupon() {
+            const couponCode = document.getElementById('couponCode').value.trim();
+            
+            if (couponCode === 'FELICES50') {
+                if (!user) {
+                    alert('Debes estar registrado para usar cupones');
+                    return;
+                }
+                
+                // Verificar si ya tiene este descuento
+                const hasDiscount = user.discounts.some(d => d.type === 'promo');
+                if (!hasDiscount) {
+                    user.discounts.push({ 
+                        type: 'promo', 
+                        description: 'Descuento 10% cupón FELICES50', 
+                        percentage: 10 
+                    });
+                    renderCartPage();
+                    updateUserInfo();
+                    alert('¡Cupón aplicado exitosamente!');
+                } else {
+                    alert('Este descuento ya está aplicado');
+                }
+            } else if (couponCode) {
+                alert('Código de cupón no válido');
+            }
+            
+            document.getElementById('couponCode').value = '';
+        }
+
+        function loadRecommendedProducts() {
+            // Cargar algunos productos recomendados
+            const recommended = products.slice(0, 4);
+            const container = document.getElementById('recommendedProducts');
+            
+            container.innerHTML = recommended.map(product => `
+                <div class="recommended-product" onclick="addRecommendedToCart('${product.id}')">
+                    <div class="recommended-image">${product.image}</div>
+                    <h4>${product.name}</h4>
+                    <p class="recommended-price">$${product.price.toLocaleString('es-CL')}</p>
+                    <button class="add-recommended-btn">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addRecommendedToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                const cartItem = {
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1,
+                    customMessage: '',
+                    image: product.image
+                };
+
+                const existingItemIndex = cart.findIndex(item => item.id === cartItem.id);
+                if (existingItemIndex > -1) {
+                    cart[existingItemIndex].quantity += 1;
+                } else {
+                    cart.push(cartItem);
+                }
+
+                saveCartToStorage();
+                renderCartPage();
+                updateCartDisplay();
+                
+                // Mostrar notificación
+                alert('Producto agregado al carrito');
+            }
+        }
+
+        // Manejo del formulario de pago (en este archivo porque el modal está aquí)
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentForm = document.getElementById('paymentForm');
+            paymentForm?.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const cardNumber = document.getElementById('cardNumber').value.replace(/\s+/g, '');
+                const cardName = document.getElementById('cardName').value.trim();
+                const cardExp = document.getElementById('cardExp').value.trim();
+                const cardCvv = document.getElementById('cardCvv').value.trim();
+
+                if (cardNumber.length < 12 || cardCvv.length < 3 || !cardName || !cardExp) {
+                    alert('Por favor completa correctamente los datos de la tarjeta');
+                    return;
+                }
+
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                setTimeout(() => {
+                    const orderNumber = 'PAY-' + Date.now();
+                    alert(`Pago procesado correctamente.\nNúmero de transacción: ${orderNumber}\nTotal: $${total.toLocaleString('es-CL')}`);
+
+                    // Limpiar carrito y actualizar UI
+                    cart = [];
+                    saveCartToStorage();
+                    renderCartPage();
+                    updateCartDisplay();
+                    document.getElementById('paymentModal').style.display = 'none';
+                    window.location.href = 'pedido.html';
+                }, 800);
+            });
+        });
+    </script>
+</body>
+</html>

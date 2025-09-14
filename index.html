@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pastelería Mil Sabores - 50 Años de Tradición</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1 class="logo-text">Mil Sabores</h1>
+                    <span class="logo-subtitle">50 años de tradición</span>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link active">Inicio</a></li>
+                    <li class="nav-item"><a href="productos.html" class="nav-link">Productos</a></li>
+                    <li class="nav-item"><a href="nosotros.html" class="nav-link">Nosotros</a></li>
+                    <li class="nav-item"><a href="contacto.html" class="nav-link">Contacto</a></li>
+                    <li class="nav-item"><a href="login.html" class="nav-link" id="loginBtn">Iniciar Sesión</a></li>
+                    <li class="nav-item"><a href="carrito.html" class="nav-link cart-link" id="cartBtn"><i class="fas fa-shopping-cart"></i> <span id="cartCount">0</span></a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Sección Hero -->
+        <section id="inicio" class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Bienvenidos a Pastelería Mil Sabores</h1>
+                <p class="hero-subtitle">Celebrando 50 años de dulces momentos y tradición familiar</p>
+                <p class="hero-description">Desde 1975, creando los mejores sabores para tus momentos especiales. ¡Famosos por nuestro récord Guinness de la torta más grande del mundo!</p>
+                <button class="cta-button" onclick="window.location.href='productos.html'">Ver Productos</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Pastelería Mil Sabores</h3>
+                    <p>50 años endulzando momentos especiales</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="productos.html">Productos</a></li>
+                        <li><a href="nosotros.html">Nosotros</a></li>
+                        <li><a href="contacto.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Síguenos</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Pastelería Mil Sabores. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

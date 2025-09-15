@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finalizar Pedido - Pastelería Mil Sabores</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pedido-styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -13,7 +14,7 @@
         <nav class="navbar">
             <div class="nav-container">
                 <div class="logo">
-                    <h1 class="logo-text">Mil Sabores</h1>
+                    <h1 class="logo-text">🍰 Mil Sabores</h1>
                     <span class="logo-subtitle">50 años de tradición</span>
                 </div>
                 <ul class="nav-menu">
@@ -52,7 +53,7 @@
                     </div>
                     <div class="step">
                         <span class="step-number">4</span>
-                        <span class="step-label">Confirmación</span>
+                        <span class="step-label">Confirmar</span>
                     </div>
                 </div>
             </div>
@@ -61,7 +62,7 @@
                 <div class="checkout-form-section">
                     <!-- Paso 1: Información de contacto -->
                     <div class="checkout-step-content" id="step1">
-                        <h2>Información de Contacto</h2>
+                        <h2 class="section-title">Información de Contacto</h2>
                         <form id="contactForm" class="checkout-form">
                             <div class="form-row">
                                 <div class="form-group">
@@ -78,15 +79,15 @@
                                 <input type="email" id="contactEmail" required readonly>
                             </div>
                             <div class="form-group">
-                                <label for="specialRequests">Solicitudes especiales</label>
-                                <textarea id="specialRequests" placeholder="Ej: Sin nueces, decoración específica, etc."></textarea>
+                                <label for="specialRequests"><i class="fas fa-comment-alt"></i> Solicitudes especiales</label>
+                                <textarea id="specialRequests" placeholder="Ej: Sin nueces, decoración específica, mensaje personalizado para la torta..."></textarea>
                             </div>
                         </form>
                     </div>
 
                     <!-- Paso 2: Información de entrega -->
                     <div class="checkout-step-content" id="step2" style="display: none;">
-                        <h2>Información de Entrega</h2>
+                        <h2 class="section-title">Información de Entrega</h2>
                         <form id="deliveryForm" class="checkout-form">
                             <div class="delivery-options">
                                 <label class="delivery-option">
@@ -112,20 +113,20 @@
                             </div>
 
                             <div id="deliveryAddress" class="delivery-address">
-                                <h3>Dirección de entrega</h3>
+                                <h3 class="section-title">Dirección de entrega</h3>
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label for="address">Dirección *</label>
+                                        <label for="address"><i class="fas fa-map-marker-alt"></i> Dirección *</label>
                                         <input type="text" id="address" placeholder="Calle Principal 123" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="addressNumber">Número</label>
+                                        <label for="addressNumber"><i class="fas fa-hashtag"></i> Número</label>
                                         <input type="text" id="addressNumber" placeholder="123">
                                     </div>
                                 </div>
-                                <div class="form-row">
+                                <div class="form-row location-time">
                                     <div class="form-group">
-                                        <label for="commune">Comuna *</label>
+                                        <label for="commune"><i class="fas fa-map"></i> Comuna *</label>
                                         <select id="commune" required>
                                             <option value="">Seleccionar comuna</option>
                                             <option value="santiago">Santiago</option>
@@ -136,25 +137,25 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="region">Región</label>
+                                        <label for="region"><i class="fas fa-globe-americas"></i> Región</label>
                                         <input type="text" id="region" value="Región Metropolitana" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="addressReference">Referencia</label>
+                                    <label for="addressReference"><i class="fas fa-info-circle"></i> Referencia</label>
                                     <input type="text" id="addressReference" placeholder="Ej: Casa azul, portón café">
                                 </div>
                             </div>
 
                             <div class="delivery-date">
-                                <h3>Fecha y hora de entrega</h3>
-                                <div class="form-row">
+                                <h3 class="section-title">Fecha y hora de entrega</h3>
+                                <div class="form-row location-time">
                                     <div class="form-group">
-                                        <label for="deliveryDate">Fecha preferida *</label>
+                                        <label for="deliveryDate"><i class="far fa-calendar-alt"></i> Fecha preferida *</label>
                                         <input type="date" id="deliveryDate" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="deliveryTime">Horario preferido</label>
+                                        <label for="deliveryTime"><i class="far fa-clock"></i> Horario preferido</label>
                                         <select id="deliveryTime">
                                             <option value="morning">Mañana (09:00 - 12:00)</option>
                                             <option value="afternoon">Tarde (14:00 - 17:00)</option>
@@ -168,7 +169,7 @@
 
                     <!-- Paso 3: Método de pago -->
                     <div class="checkout-step-content" id="step3" style="display: none;">
-                        <h2>Método de Pago</h2>
+                        <h2 class="section-title">Método de Pago</h2>
                         <div class="payment-methods">
                             <label class="payment-method">
                                 <input type="radio" name="paymentMethod" value="card" checked>
@@ -194,24 +195,24 @@
                         </div>
 
                         <div id="cardPayment" class="payment-form">
-                            <h3>Información de la tarjeta</h3>
+                            <h3 class="section-title">Información de la tarjeta</h3>
                             <div class="form-group">
-                                <label for="cardNumber">Número de tarjeta *</label>
-                                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                                <label for="cardNumber"><i class="far fa-credit-card"></i> Número de tarjeta *</label>
+                                <input type="text" id="cardNumber" class="card-input" placeholder="1234 5678 9012 3456" maxlength="19">
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="expiryDate">Fecha de vencimiento *</label>
-                                    <input type="text" id="expiryDate" placeholder="MM/AA" maxlength="5">
+                                    <label for="expiryDate"><i class="far fa-calendar"></i> Fecha de vencimiento *</label>
+                                    <input type="text" id="expiryDate" class="card-input" placeholder="MM/AA" maxlength="5">
                                 </div>
                                 <div class="form-group">
-                                    <label for="cvv">CVV *</label>
-                                    <input type="text" id="cvv" placeholder="123" maxlength="4">
+                                    <label for="cvv"><i class="fas fa-lock"></i> CVV *</label>
+                                    <input type="text" id="cvv" class="card-input" placeholder="123" maxlength="4">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cardName">Nombre en la tarjeta *</label>
-                                <input type="text" id="cardName" placeholder="Como aparece en la tarjeta">
+                                <label for="cardName"><i class="far fa-user"></i> Nombre en la tarjeta *</label>
+                                <input type="text" id="cardName" class="card-input" placeholder="Como aparece en la tarjeta">
                             </div>
                         </div>
                     </div>
@@ -222,8 +223,8 @@
                             <div class="confirmation-icon">
                                 <i class="fas fa-check-circle"></i>
                             </div>
-                            <h2>¡Pedido Confirmado!</h2>
-                            <p>Tu pedido ha sido procesado exitosamente</p>
+                            <h2>¡Pago Procesado y Pedido Confirmado!</h2>
+                            <p>Tu pedido ha sido procesado exitosamente y el pago ha sido confirmado</p>
                             
                             <div class="order-details" id="orderDetails">
                                 <!-- Los detalles del pedido se llenarán aquí -->
@@ -267,7 +268,7 @@
                             Siguiente <i class="fas fa-arrow-right"></i>
                         </button>
                         <button id="submitBtn" onclick="submitOrder()" style="display: none;">
-                            <i class="fas fa-check"></i> Confirmar Pedido
+                            <i class="fas fa-credit-card"></i> Procesar Pago y Confirmar Pedido
                         </button>
                     </div>
                 </div>
@@ -275,7 +276,7 @@
                 <!-- Resumen del pedido -->
                 <div class="order-summary-section">
                     <div class="order-summary-card">
-                        <h3>Resumen del Pedido</h3>
+                        <h3 class="section-title">Resumen del Pedido</h3>
                         
                         <div class="summary-items" id="summaryItems">
                             <!-- Items del carrito -->
@@ -383,18 +384,18 @@
             const summaryDiscountLine = document.getElementById('summaryDiscountLine');
             const summaryTotal = document.getElementById('summaryTotal');
 
-            // Mostrar items
+            // Mostrar items con imágenes
             summaryItems.innerHTML = cart.map(item => `
                 <div class="summary-item">
+                    <img src="${item.image}" alt="${item.name}" class="summary-item-image">
                     <div class="item-info">
-                        <span class="item-emoji">${item.image}</span>
                         <div>
-                            <div class="item-name">${item.name}</div>
+                            <span class="item-name">${item.name}</span>
                             <div class="item-details">Cantidad: ${item.quantity}</div>
-                            ${item.customMessage ? `<div class="item-message">"${item.customMessage}"</div>` : ''}
+                            ${item.message ? `<div class="item-message">${item.message}</div>` : ''}
                         </div>
                     </div>
-                    <div class="item-price">$${(item.price * item.quantity).toLocaleString('es-CL')}</div>
+                    <div class="item-price">$${item.price.toLocaleString('es-CL')}</div>
                 </div>
             `).join('');
 
@@ -532,44 +533,69 @@
                 return;
             }
 
-            // Recopilar datos del pedido
-            const orderData = {
-                customer: {
-                    name: document.getElementById('contactName').value,
-                    phone: document.getElementById('contactPhone').value,
-                    email: document.getElementById('contactEmail').value
-                },
-                delivery: {
-                    type: document.querySelector('input[name="deliveryType"]:checked').value,
-                    address: document.getElementById('address').value,
-                    commune: document.getElementById('commune').value,
-                    date: document.getElementById('deliveryDate').value,
-                    time: document.getElementById('deliveryTime').value
-                },
-                payment: {
-                    method: document.querySelector('input[name="paymentMethod"]:checked').value
-                },
-                items: cart,
-                totals: {
-                    subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                    discount: calculateDiscount(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)).amount,
-                    total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) - calculateDiscount(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)).amount
-                },
-                orderNumber: 'ORD-' + Date.now(),
-                date: new Date().toISOString()
-            };
+            // Simular procesamiento de pago
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            let paymentMessage = '';
+            
+            if (paymentMethod === 'card') {
+                paymentMessage = 'Procesando pago con tarjeta...';
+            } else if (paymentMethod === 'transfer') {
+                paymentMessage = 'Generando datos para transferencia...';
+            } else {
+                paymentMessage = 'Confirmando pago contra entrega...';
+            }
 
-            // Mostrar confirmación
-            showOrderConfirmation(orderData);
-            
-            // Limpiar carrito
-            cart = [];
-            saveCartToStorage();
-            updateCartDisplay();
-            
-            // Ir al paso de confirmación
-            currentStep = 4;
-            updateStepDisplay();
+            // Mostrar indicador de carga
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + paymentMessage;
+            submitBtn.disabled = true;
+
+            // Simular tiempo de procesamiento
+            setTimeout(() => {
+                // Recopilar datos del pedido
+                const orderData = {
+                    customer: {
+                        name: document.getElementById('contactName').value,
+                        phone: document.getElementById('contactPhone').value,
+                        email: document.getElementById('contactEmail').value
+                    },
+                    delivery: {
+                        type: document.querySelector('input[name="deliveryType"]:checked').value,
+                        address: document.getElementById('address').value,
+                        commune: document.getElementById('commune').value,
+                        date: document.getElementById('deliveryDate').value,
+                        time: document.getElementById('deliveryTime').value
+                    },
+                    payment: {
+                        method: document.querySelector('input[name="paymentMethod"]:checked').value
+                    },
+                    items: [...cart], // Copia del carrito antes de limpiarlo
+                    totals: {
+                        subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                        discount: calculateDiscount(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)).amount,
+                        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) - calculateDiscount(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)).amount
+                    },
+                    orderNumber: 'ORD-' + Date.now(),
+                    date: new Date().toISOString()
+                };
+
+                // Mostrar confirmación
+                showOrderConfirmation(orderData);
+                
+                // Limpiar carrito solo después de confirmar el pedido
+                cart = [];
+                saveCartToStorage();
+                updateCartDisplay();
+                
+                // Ir al paso de confirmación
+                currentStep = 4;
+                updateStepDisplay();
+
+                // Restaurar botón
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 1500); // 1.5 segundos de simulación
         }
 
         function showOrderConfirmation(orderData) {
@@ -597,6 +623,12 @@
                         ` : ''}
                         <p><strong>Fecha:</strong> ${new Date(orderData.delivery.date).toLocaleDateString('es-CL')}</p>
                         <p><strong>Horario:</strong> ${getTimeSlotText(orderData.delivery.time)}</p>
+                    </div>
+                    
+                    <div class="order-payment">
+                        <h4>Método de Pago</h4>
+                        <p><strong>Tipo:</strong> ${getPaymentMethodText(orderData.payment.method)}</p>
+                        <p class="payment-status"><i class="fas fa-check-circle" style="color: green;"></i> <strong>Estado: Procesado correctamente</strong></p>
                     </div>
                     
                     <div class="order-items">
@@ -636,6 +668,15 @@
                 'evening': 'Noche (18:00 - 20:00)'
             };
             return slots[slot] || slot;
+        }
+
+        function getPaymentMethodText(method) {
+            const methods = {
+                'card': 'Tarjeta de Crédito/Débito',
+                'transfer': 'Transferencia Bancaria',
+                'cash': 'Pago en Efectivo (contra entrega)'
+            };
+            return methods[method] || method;
         }
     </script>
 </body>

@@ -1,0 +1,165 @@
+/* Estilos adicionales para la página de pedido */
+
+/* Estilos para mejorar la presentación de productos en el resumen */
+.summary-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: #fff9f0;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.summary-item-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 15px;
+    border: 2px solid #fff;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+}
+
+/* Mejorar el campo de solicitudes especiales */
+#specialRequests {
+    border-radius: 10px;
+    border: 2px solid #FFD8B1;
+    padding: 12px;
+    font-family: var(--font-primary);
+    resize: vertical;
+    min-height: 100px;
+    background-color: #FFF9F0;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#specialRequests:focus {
+    border-color: var(--accent-chocolate);
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2);
+    outline: none;
+}
+
+#specialRequests::placeholder {
+    color: #BCA89B;
+    font-style: italic;
+}
+
+/* Mejorar las opciones de entrega y pago */
+.delivery-option,
+.payment-method {
+    position: relative;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.delivery-option:hover,
+.payment-method:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+}
+
+.delivery-option input[type="radio"],
+.payment-method input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.option-content,
+.method-content {
+    padding: 15px;
+    background-color: white;
+    border-left: 5px solid transparent;
+    transition: background-color 0.3s ease, border-left 0.3s ease;
+}
+
+.delivery-option input[type="radio"]:checked + .option-content,
+.payment-method input[type="radio"]:checked + .method-content {
+    background-color: #FFF5E1;
+    border-left: 5px solid var(--accent-chocolate);
+}
+
+.option-content i,
+.method-content i {
+    font-size: 2rem;
+    margin-right: 15px;
+    color: var(--accent-chocolate);
+}
+
+/* Mejorar los campos de comuna y horario */
+.form-row.location-time {
+    margin-top: 20px;
+}
+
+#commune,
+#deliveryTime {
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid #FFD8B1;
+    padding: 0 15px;
+    background-color: white;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238B4513' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 15px) center;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+#commune:focus,
+#deliveryTime:focus {
+    border-color: var(--accent-chocolate);
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2);
+    outline: none;
+}
+
+/* Estilos para el selector de fecha */
+#deliveryDate {
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid #FFD8B1;
+    padding: 0 15px;
+    background-color: white;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    cursor: pointer;
+}
+
+#deliveryDate:focus {
+    border-color: var(--accent-chocolate);
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2);
+    outline: none;
+}
+
+/* Información de la tarjeta */
+.card-input {
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid #FFD8B1;
+    padding: 0 15px;
+    background-color: white;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    width: 100%;
+}
+
+.card-input:focus {
+    border-color: var(--accent-chocolate);
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2);
+    outline: none;
+}
+
+/* Estilos para los títulos de sección */
+.section-title {
+    color: var(--accent-chocolate);
+    font-family: var(--font-heading);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed #FFD8B1;
+}

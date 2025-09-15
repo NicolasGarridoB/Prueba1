@@ -52,7 +52,7 @@
                     </div>
                     <div class="step">
                         <span class="step-number">4</span>
-                        <span class="step-label">Confirmación</span>
+                        <span class="step-label">Confirmar</span>
                     </div>
                 </div>
             </div>
@@ -222,8 +222,8 @@
                             <div class="confirmation-icon">
                                 <i class="fas fa-check-circle"></i>
                             </div>
-                            <h2>¡Pedido Confirmado!</h2>
-                            <p>Tu pedido ha sido procesado exitosamente</p>
+                            <h2>¡Pago Procesado y Pedido Confirmado!</h2>
+                            <p>Tu pedido ha sido procesado exitosamente y el pago ha sido confirmado</p>
                             
                             <div class="order-details" id="orderDetails">
                                 <!-- Los detalles del pedido se llenarán aquí -->
@@ -267,7 +267,7 @@
                             Siguiente <i class="fas fa-arrow-right"></i>
                         </button>
                         <button id="submitBtn" onclick="submitOrder()" style="display: none;">
-                            <i class="fas fa-check"></i> Confirmar Pedido
+                            <i class="fas fa-credit-card"></i> Procesar Pago y Confirmar Pedido
                         </button>
                     </div>
                 </div>
@@ -532,44 +532,69 @@
                 return;
             }
 
-            // Recopilar datos del pedido
-            const orderData = {
-                customer: {
-                    name: document.getElementById('contactName').value,
-                    phone: document.getElementById('contactPhone').value,
-                    email: document.getElementById('contactEmail').value
-                },
-                delivery: {
-                    type: document.querySelector('input[name="deliveryType"]:checked').value,
-                    address: document.getElementById('address').value,
-                    commune: document.getElementById('commune').value,
-                    date: document.getElementById('deliveryDate').value,
-                    time: document.getElementById('deliveryTime').value
-                },
-                payment: {
-                    method: document.querySelector('input[name="paymentMethod"]:checked').value
-                },
-                items: cart,
-                totals: {
-                    subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                    discount: calculateDiscount(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)).amount,
-                    total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) - calculateDiscount(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)).amount
-                },
-                orderNumber: 'ORD-' + Date.now(),
-                date: new Date().toISOString()
-            };
+            // Simular procesamiento de pago
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            let paymentMessage = '';
+            
+            if (paymentMethod === 'card') {
+                paymentMessage = 'Procesando pago con tarjeta...';
+            } else if (paymentMethod === 'transfer') {
+                paymentMessage = 'Generando datos para transferencia...';
+            } else {
+                paymentMessage = 'Confirmando pago contra entrega...';
+            }
 
-            // Mostrar confirmación
-            showOrderConfirmation(orderData);
-            
-            // Limpiar carrito
-            cart = [];
-            saveCartToStorage();
-            updateCartDisplay();
-            
-            // Ir al paso de confirmación
-            currentStep = 4;
-            updateStepDisplay();
+            // Mostrar indicador de carga
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + paymentMessage;
+            submitBtn.disabled = true;
+
+            // Simular tiempo de procesamiento
+            setTimeout(() => {
+                // Recopilar datos del pedido
+                const orderData = {
+                    customer: {
+                        name: document.getElementById('contactName').value,
+                        phone: document.getElementById('contactPhone').value,
+                        email: document.getElementById('contactEmail').value
+                    },
+                    delivery: {
+                        type: document.querySelector('input[name="deliveryType"]:checked').value,
+                        address: document.getElementById('address').value,
+                        commune: document.getElementById('commune').value,
+                        date: document.getElementById('deliveryDate').value,
+                        time: document.getElementById('deliveryTime').value
+                    },
+                    payment: {
+                        method: document.querySelector('input[name="paymentMethod"]:checked').value
+                    },
+                    items: [...cart], // Copia del carrito antes de limpiarlo
+                    totals: {
+                        subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                        discount: calculateDiscount(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)).amount,
+                        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) - calculateDiscount(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)).amount
+                    },
+                    orderNumber: 'ORD-' + Date.now(),
+                    date: new Date().toISOString()
+                };
+
+                // Mostrar confirmación
+                showOrderConfirmation(orderData);
+                
+                // Limpiar carrito solo después de confirmar el pedido
+                cart = [];
+                saveCartToStorage();
+                updateCartDisplay();
+                
+                // Ir al paso de confirmación
+                currentStep = 4;
+                updateStepDisplay();
+
+                // Restaurar botón
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 1500); // 1.5 segundos de simulación
         }
 
         function showOrderConfirmation(orderData) {
@@ -597,6 +622,12 @@
                         ` : ''}
                         <p><strong>Fecha:</strong> ${new Date(orderData.delivery.date).toLocaleDateString('es-CL')}</p>
                         <p><strong>Horario:</strong> ${getTimeSlotText(orderData.delivery.time)}</p>
+                    </div>
+                    
+                    <div class="order-payment">
+                        <h4>Método de Pago</h4>
+                        <p><strong>Tipo:</strong> ${getPaymentMethodText(orderData.payment.method)}</p>
+                        <p class="payment-status"><i class="fas fa-check-circle" style="color: green;"></i> <strong>Estado: Procesado correctamente</strong></p>
                     </div>
                     
                     <div class="order-items">
@@ -636,6 +667,15 @@
                 'evening': 'Noche (18:00 - 20:00)'
             };
             return slots[slot] || slot;
+        }
+
+        function getPaymentMethodText(method) {
+            const methods = {
+                'card': 'Tarjeta de Crédito/Débito',
+                'transfer': 'Transferencia Bancaria',
+                'cash': 'Pago en Efectivo (contra entrega)'
+            };
+            return methods[method] || method;
         }
     </script>
 </body>

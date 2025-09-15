@@ -363,9 +363,8 @@ function logout() {
 
 function renderProducts(productsToRender = products) {
     const productsGrid = document.getElementById('productsGrid');
-    
     productsGrid.innerHTML = productsToRender.map(product => `
-        <div class="product-card" data-category="${product.category}" onclick="openProductModal('${product.id}')">
+        <div class="product-card" data-category="${product.category}">
             <div class="product-image">
                 <img src="${product.image}" alt="${product.name}" style="width:100%;height:150px;object-fit:cover;border-radius:8px;">
             </div>
@@ -383,7 +382,34 @@ function renderProducts(productsToRender = products) {
     `).join('');
 }
 
-// Renderizar productos en el grid
+// Nueva función para agregar producto al carrito desde el botón
+function addProductToCart(productId) {
+    const product = productos.find(p => p.id === productId);
+    if (!product) return;
+
+    // Por defecto cantidad 1 y sin mensaje personalizado
+    const cartItem = {
+        id: product.id,
+        name: product.nombre,
+        price: parseInt(product.precio.replace(/\D/g, '')),
+        quantity: 1,
+        customMessage: '',
+        image: product.imagen
+    };
+
+    const existingItemIndex = cart.findIndex(item => item.id === cartItem.id && item.customMessage === cartItem.customMessage);
+    if (existingItemIndex > -1) {
+        cart[existingItemIndex].quantity += 1;
+    } else {
+        cart.push(cartItem);
+    }
+
+    updateCartDisplay();
+    saveCartToStorage();
+
+    alert('Producto agregado al carrito');
+}
+
 function renderProductos(productosFiltrados) {
   const grid = document.getElementById('productsGrid');
   grid.innerHTML = '';
@@ -395,15 +421,17 @@ function renderProductos(productosFiltrados) {
     const div = document.createElement('div');
     div.className = 'product-card';
     div.innerHTML = `
-      <img src="${producto.imagen}" alt="${producto.nombre}" style="width:100%;height:150px;object-fit:cover;border-radius:8px 8px 0 0;">
+      <div class="product-image">
+        <img src="${producto.imagen}" alt="${producto.nombre}" style="width:100%;height:150px;object-fit:cover;border-radius:8px 8px 0 0;">
+      </div>
       <div class="product-card-content">
-        <h3>${producto.nombre}</h3>
+        <h3 class="product-name">${producto.nombre}</h3>
         <p class="price">${producto.precio}</p>
         <p class="desc">${producto.descripcion}</p>
-                <div style="margin-top:8px; display:flex; gap:8px;">
-                    <button class="view-btn" onclick="openProductModal('${producto.id}')">Ver más</button>
-                    <button class="add-btn" onclick="addProductById('${producto.id}')">Agregar al carrito</button>
-                </div>
+        <div style="margin-top:8px; display:flex; gap:8px;">
+            <button class="view-btn" onclick="openProductModal('${producto.id}')">Ver más</button>
+            <button class="add-btn" onclick="addProductById('${producto.id}')">Agregar al carrito</button>
+        </div>
       </div>
     `;
     grid.appendChild(div);
@@ -678,9 +706,14 @@ function calculateDiscount(subtotal) {
 
 function removeFromCart(index) {
     cart.splice(index, 1);
-    updateCartDisplay();
-    renderCart();
     saveCartToStorage();
+    updateCartDisplay();
+    // Si estamos en la página de carrito usa su renderer, si no usa el renderer genérico
+    if (typeof window.renderCartPage === 'function') {
+        window.renderCartPage();
+    } else if (typeof window.renderCart === 'function') {
+        window.renderCart();
+    }
 }
 
 function checkout() {

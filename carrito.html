@@ -54,7 +54,7 @@
                     </div>
                     
                     <div class="continue-shopping">
-                        <a href="index.html#productos" class="continue-btn">
+                        <a href="productos.html" class="continue-btn">
                             <i class="fas fa-arrow-left"></i> Continuar Comprando
                         </a>
                     </div>
@@ -227,7 +227,7 @@
                         <i class="fas fa-shopping-cart empty-cart-icon"></i>
                         <h3>Tu carrito está vacío</h3>
                         <p>¡Descubre nuestros deliciosos productos y agrega algunos a tu carrito!</p>
-                        <a href="index.html#productos" class="browse-products-btn">
+                        <a href="productos.html" class="browse-products-btn">
                             <i class="fas fa-cake"></i> Ver Productos
                         </a>
                     </div>
@@ -242,6 +242,7 @@
             cartContainer.innerHTML = cart.map((item, index) => `
                 <div class="cart-item-card">
                     <div class="item-image">
+                        <!-- Mostrar la imagen del producto -->
                         <img src="${item.image}" alt="${item.name}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;">
                     </div>
                     <div class="item-details">

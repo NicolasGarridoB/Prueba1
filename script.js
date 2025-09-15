@@ -135,6 +135,24 @@ let cart = [];
 let user = null;
 let currentProduct = null;
 
+// Normalizar datos: crear un array `products` con claves en inglés y precio numérico
+function parsePrice(precioStr) {
+    if (typeof precioStr === 'number') return precioStr;
+    // Eliminar todo lo que no sea dígito
+    const digits = String(precioStr).replace(/[^0-9]/g, '');
+    return digits ? parseInt(digits, 10) : 0;
+}
+
+const products = productos.map(p => ({
+    id: p.id,
+    category: p.categoria,
+    name: p.nombre,
+    price: parsePrice(p.precio),
+    priceDisplay: p.precio,
+    description: p.descripcion,
+    image: p.imagen
+}));
+
 // Inicialización de la aplicación
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
@@ -206,15 +224,6 @@ function setupEventListeners() {
     promoCodeInput?.addEventListener('input', checkPromoCode);
 }
 
-// Función para filtrar productos por búsqueda
-searchInput.addEventListener('input', function() {
-  const texto = this.value.toLowerCase();
-  const productosFiltrados = productos.filter(producto =>
-    producto.nombre.toLowerCase().includes(texto) ||
-    producto.descripcion.toLowerCase().includes(texto)
-  );
-  renderProductos(productosFiltrados);
-});
 
 function setupAuthForms() {
     const loginForm = document.getElementById('loginForm');
@@ -293,9 +302,13 @@ function handleRegister(e) {
     user = {
         name: name,
         email: email,
+        password: password,
         birthDate: birthDate,
         discounts: discounts
     };
+
+    // Guardar usuario en localStorage para que el login pueda verificar credenciales
+    localStorage.setItem('usuarioMilSabores', JSON.stringify(user));
 
     alert('Registro exitoso. ' + (discounts.length > 0 ? 'Descuentos aplicados!' : ''));
     document.getElementById('loginModal').style.display = 'none';
@@ -353,16 +366,17 @@ function renderProducts(productsToRender = products) {
     productsGrid.innerHTML = productsToRender.map(product => `
         <div class="product-card" data-category="${product.category}">
             <div class="product-image">
-                <img src="${product.imagen}" alt="${product.nombre}" style="width:100%;height:150px;object-fit:cover;border-radius:8px;">
+                <img src="${product.image}" alt="${product.name}" style="width:100%;height:150px;object-fit:cover;border-radius:8px;">
             </div>
             <div class="product-content">
-                <h3 class="product-name">${product.nombre}</h3>
-                <p class="product-category">${getCategoryName(product.categoria)}</p>
-                <p class="product-description">${product.descripcion}</p>
-                <p class="price">${product.precio}</p>
-                <button class="add-to-cart-btn" onclick="addProductToCart('${product.id}')">
-                    <i class="fas fa-cart-plus"></i> Agregar al Carrito
-                </button>
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-category">${getCategoryName(product.category)}</p>
+                <p class="product-description">${product.description}</p>
+                <p class="price">$${product.price.toLocaleString('es-CL')} CLP</p>
+                <div style="margin-top:8px; display:flex; gap:8px;">
+                  <button class="view-btn" onclick="event.stopPropagation(); openProductModal('${product.id}')">Ver más</button>
+                  <button class="add-btn" onclick="event.stopPropagation(); addProductById('${product.id}')">Agregar al carrito</button>
+                </div>
             </div>
         </div>
     `).join('');
@@ -414,9 +428,10 @@ function renderProductos(productosFiltrados) {
         <h3 class="product-name">${producto.nombre}</h3>
         <p class="price">${producto.precio}</p>
         <p class="desc">${producto.descripcion}</p>
-        <button class="add-to-cart-btn" onclick="addProductToCart('${producto.id}')">
-          <i class="fas fa-cart-plus"></i> Agregar al Carrito
-        </button>
+        <div style="margin-top:8px; display:flex; gap:8px;">
+            <button class="view-btn" onclick="openProductModal('${producto.id}')">Ver más</button>
+            <button class="add-btn" onclick="addProductById('${producto.id}')">Agregar al carrito</button>
+        </div>
       </div>
     `;
     grid.appendChild(div);
@@ -448,28 +463,20 @@ function filterProducts(category) {
 
 // Filtrar productos por categoría
 function filtrarPorCategoria(categoria) {
-  if (categoria === 'all') {
-    renderProductos(productos);
-  } else {
-    const filtrados = productos.filter(p => p.categoria === categoria);
-    renderProductos(filtrados);
-  }
+    if (categoria === 'all') {
+        renderProducts(products);
+    } else {
+        const filtrados = products.filter(p => p.category === categoria);
+        renderProducts(filtrados);
+    }
 }
 
 // Evento para los botones de filtro
-const filterBtns = document.querySelectorAll('.filter-btn');
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', function() {
-    filterBtns.forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
-    const categoria = this.getAttribute('data-category');
-    filtrarPorCategoria(categoria);
-  });
-});
+// (Los listeners de filtro se agregan en setupEventListeners)
 
 // Mostrar todos los productos al cargar
 window.addEventListener('DOMContentLoaded', () => {
-  renderProductos(productos);
+    renderProducts(products);
 });
 
 // Búsqueda
@@ -489,7 +496,7 @@ function searchProducts(query) {
 }
 
         function openProductModal(productId) {
-            currentProduct = products.find(p => p.id === productId);
+                    currentProduct = products.find(p => p.id === productId);
             if (!currentProduct) return;
 
             // En lugar de abrir modal, redirigir a una página de producto individual
@@ -524,6 +531,67 @@ function searchProducts(query) {
     const currentValue = parseInt(quantityInput.value);
     const newValue = Math.max(1, currentValue + change);
     quantityInput.value = newValue;
+}
+
+// Agregar al carrito desde el grid (sin abrir modal)
+function addProductById(productId) {
+    const prod = products.find(p => p.id === productId);
+    if (!prod) return;
+
+    const cartItem = {
+        id: prod.id,
+        name: prod.name,
+        price: prod.price,
+        quantity: 1,
+        customMessage: '',
+        image: prod.image
+    };
+
+    const existingItemIndex = cart.findIndex(item => item.id === cartItem.id && item.customMessage === cartItem.customMessage);
+    if (existingItemIndex > -1) {
+        cart[existingItemIndex].quantity += 1;
+    } else {
+        cart.push(cartItem);
+    }
+
+    updateCartDisplay();
+    saveCartToStorage();
+    // Pequeña confirmación no intrusiva
+    // Usamos alert por simplicidad; puedes reemplazar por un toast si prefieres
+    // Evitar redirigir automáticamente
+    alert('Producto agregado al carrito');
+}
+
+// Asegurarse de que al guardar/cargar el carrito se conserve la estructura correcta
+function saveCartToStorage() {
+    try {
+        localStorage.setItem('milsabores_cart', JSON.stringify(cart));
+    } catch (err) {
+        console.warn('No se pudo guardar el carrito en localStorage', err);
+    }
+}
+
+function loadCartFromStorage() {
+    try {
+        const saved = localStorage.getItem('milsabores_cart');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            // Normalizar elementos antiguos sin image o con price string
+            cart = parsed.map(item => ({
+                id: item.id,
+                name: item.name,
+                price: typeof item.price === 'number' ? item.price : parsePrice(item.price || item.priceDisplay || '0'),
+                quantity: item.quantity || 1,
+                customMessage: item.customMessage || '',
+                image: item.image || (products.find(p => p.id === item.id)?.image || '')
+            }));
+        } else {
+            cart = [];
+        }
+    } catch (err) {
+        console.warn('No se pudo cargar el carrito desde localStorage', err);
+        cart = [];
+    }
 }
 
 function addToCart() {
@@ -582,6 +650,9 @@ function renderCart() {
 
     cartItems.innerHTML = cart.map((item, index) => `
         <div class="cart-item">
+            <div class="cart-item-thumb">
+                <img src="${item.image}" alt="${item.name}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;margin-right:8px;">
+            </div>
             <div class="cart-item-info">
                 <div class="cart-item-name">${item.name}</div>
                 <div class="cart-item-details">
@@ -692,17 +763,6 @@ function checkout() {
     updateCartDisplay();
     saveCartToStorage();
     document.getElementById('cartModal').style.display = 'none';
-}
-
-function saveCartToStorage() {
-    localStorage.setItem('milsabores_cart', JSON.stringify(cart));
-}
-
-function loadCartFromStorage() {
-    const saved = localStorage.getItem('milsabores_cart');
-    if (saved) {
-        cart = JSON.parse(saved);
-    }
 }
 
 function scrollToSection(sectionId) {

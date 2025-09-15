@@ -140,6 +140,38 @@
         </div>
     </main>
 
+    <!-- Modal de pago simulado -->
+    <div id="paymentModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('paymentModal').style.display='none'">&times;</span>
+            <h2>Pago Seguro</h2>
+            <p>Ingresa los datos de pago (simulado)</p>
+            <form id="paymentForm">
+                <div class="form-row">
+                    <label>Número de tarjeta</label>
+                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                </div>
+                <div class="form-row">
+                    <label>Nombre en la tarjeta</label>
+                    <input type="text" id="cardName" placeholder="Nombre completo" required>
+                </div>
+                <div class="form-row two-cols">
+                    <div>
+                        <label>Expiración</label>
+                        <input type="text" id="cardExp" placeholder="MM/AA" required>
+                    </div>
+                    <div>
+                        <label>CVV</label>
+                        <input type="text" id="cardCvv" placeholder="123" required>
+                    </div>
+                </div>
+                <div style="text-align:right;margin-top:12px;">
+                    <button type="submit" class="checkout-btn">Pagar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -302,15 +334,19 @@
                 alert('Tu carrito está vacío');
                 return;
             }
-
             if (!user) {
                 alert('Debes iniciar sesión para realizar una compra');
                 window.location.href = 'login.html';
                 return;
             }
 
-            // Redirigir a la página de pedido
-            window.location.href = 'pedido.html';
+            // Abrir modal de pago simulado
+            const paymentModal = document.getElementById('paymentModal');
+            if (paymentModal) {
+                paymentModal.style.display = 'block';
+            } else {
+                window.location.href = 'pedido.html';
+            }
         }
 
         function applyCoupon() {
@@ -387,6 +423,38 @@
                 alert('Producto agregado al carrito');
             }
         }
+
+        // Manejo del formulario de pago (en este archivo porque el modal está aquí)
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentForm = document.getElementById('paymentForm');
+            paymentForm?.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const cardNumber = document.getElementById('cardNumber').value.replace(/\s+/g, '');
+                const cardName = document.getElementById('cardName').value.trim();
+                const cardExp = document.getElementById('cardExp').value.trim();
+                const cardCvv = document.getElementById('cardCvv').value.trim();
+
+                if (cardNumber.length < 12 || cardCvv.length < 3 || !cardName || !cardExp) {
+                    alert('Por favor completa correctamente los datos de la tarjeta');
+                    return;
+                }
+
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                setTimeout(() => {
+                    const orderNumber = 'PAY-' + Date.now();
+                    alert(`Pago procesado correctamente.\nNúmero de transacción: ${orderNumber}\nTotal: $${total.toLocaleString('es-CL')}`);
+
+                    // Limpiar carrito y actualizar UI
+                    cart = [];
+                    saveCartToStorage();
+                    renderCartPage();
+                    updateCartDisplay();
+                    document.getElementById('paymentModal').style.display = 'none';
+                    window.location.href = 'pedido.html';
+                }, 800);
+            });
+        });
     </script>
 </body>
 </html>

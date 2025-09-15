@@ -216,6 +216,50 @@ body {
     color: var(--text-primary);
 }
 
+/* Estilos para la lista de productos recomendados */
+.recommended-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.recommended-product {
+    background: var(--white);
+    padding: 0.8rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.recommended-product .recommended-image img,
+.recommended-product .recommended-image {
+    display: block;
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.6rem;
+}
+
+.recommended-product h4 { font-size: 0.95rem; margin: 0.2rem 0; }
+.recommended-product .recommended-price { color: var(--accent-chocolate); font-weight: 700; }
+.recommended-product .add-recommended-btn { margin-top: 0.4rem; padding: 6px 8px; font-size: 0.85rem; }
+
+/* Ajustes para items del carrito (imágenes alineadas) */
+.cart-item-card { display: grid; grid-template-columns: 90px 1fr 140px 120px; gap: 12px; align-items: center; padding: 12px; background: var(--white); border-radius: 10px; margin-bottom: 12px; }
+.cart-item-card .item-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.quantity-controls { display:flex; align-items:center; gap:8px; }
+.quantity-controls button { padding:6px 8px; }
+
+/* Estilos para formulario de pago en modal */
+.modal-content form .form-row { margin-bottom: 0.8rem; }
+.modal-content input { width:100%; padding:10px; border:1px solid #e0e0e0; border-radius:6px; }
+.modal-content .two-cols { display:flex; gap:10px; }
+.checkout-btn { background: var(--accent-chocolate); color: var(--white); border:none; padding:10px 16px; border-radius:8px; cursor:pointer; }
+.checkout-btn:hover { background:#6d3410 }
+
 /* Formularios de autenticación */
 .auth-tabs {
     display: flex;
@@ -923,7 +967,8 @@ body {
 
 .auth-container-page {
     width: 100%;
-    max-width: 500px;
+    max-width: none; /* Remove narrow cap so card can expand */
+    padding: 0 20px; /* small side margins */
 }
 
 .auth-card {
@@ -932,8 +977,8 @@ body {
     padding: 2.5rem 2rem;
     box-shadow: 0 10px 30px rgba(0,0,0,0.12);
     text-align: center;
-    max-width: 400px;
-    margin: 0 auto;
+    max-width: 1200px; /* limit to a reasonable max on very large screens */
+    margin: 20px auto; /* some vertical breathing room */
 }
 
 .auth-header {
@@ -1821,5 +1866,51 @@ body {
     
     .discount-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Two-column layout for auth page */
+.auth-grid {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 2rem;
+    align-items: start;
+}
+
+.auth-left {
+    min-width: 0; /* Ensure flex children shrink properly */
+}
+
+.auth-right {
+    width: 100%;
+}
+
+.auth-side-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    margin-bottom: 1rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* Make sure discount-cards look good in the sidebar */
+.auth-right .discount-cards {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+@media (max-width: 900px) {
+    .auth-grid {
+        grid-template-columns: 1fr;
+    }
+    .auth-side-image {
+        height: 180px;
+        margin-bottom: 1.2rem;
+    }
+    .auth-card {
+        padding: 1.8rem 1rem;
     }
 }

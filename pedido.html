@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finalizar Pedido - Pastelería Mil Sabores</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pedido-styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -61,7 +62,7 @@
                 <div class="checkout-form-section">
                     <!-- Paso 1: Información de contacto -->
                     <div class="checkout-step-content" id="step1">
-                        <h2>Información de Contacto</h2>
+                        <h2 class="section-title">Información de Contacto</h2>
                         <form id="contactForm" class="checkout-form">
                             <div class="form-row">
                                 <div class="form-group">
@@ -78,15 +79,15 @@
                                 <input type="email" id="contactEmail" required readonly>
                             </div>
                             <div class="form-group">
-                                <label for="specialRequests">Solicitudes especiales</label>
-                                <textarea id="specialRequests" placeholder="Ej: Sin nueces, decoración específica, etc." rows="4"></textarea>
+                                <label for="specialRequests"><i class="fas fa-comment-alt"></i> Solicitudes especiales</label>
+                                <textarea id="specialRequests" placeholder="Ej: Sin nueces, decoración específica, mensaje personalizado para la torta..."></textarea>
                             </div>
                         </form>
                     </div>
 
                     <!-- Paso 2: Información de entrega -->
                     <div class="checkout-step-content" id="step2" style="display: none;">
-                        <h2>Información de Entrega</h2>
+                        <h2 class="section-title">Información de Entrega</h2>
                         <form id="deliveryForm" class="checkout-form">
                             <div class="delivery-options">
                                 <label class="delivery-option">
@@ -112,20 +113,20 @@
                             </div>
 
                             <div id="deliveryAddress" class="delivery-address">
-                                <h3>Dirección de entrega</h3>
+                                <h3 class="section-title">Dirección de entrega</h3>
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label for="address">Dirección *</label>
+                                        <label for="address"><i class="fas fa-map-marker-alt"></i> Dirección *</label>
                                         <input type="text" id="address" placeholder="Calle Principal 123" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="addressNumber">Número</label>
+                                        <label for="addressNumber"><i class="fas fa-hashtag"></i> Número</label>
                                         <input type="text" id="addressNumber" placeholder="123">
                                     </div>
                                 </div>
-                                <div class="form-row">
+                                <div class="form-row location-time">
                                     <div class="form-group">
-                                        <label for="commune">Comuna *</label>
+                                        <label for="commune"><i class="fas fa-map"></i> Comuna *</label>
                                         <select id="commune" required>
                                             <option value="">Seleccionar comuna</option>
                                             <option value="santiago">Santiago</option>
@@ -136,25 +137,25 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="region">Región</label>
+                                        <label for="region"><i class="fas fa-globe-americas"></i> Región</label>
                                         <input type="text" id="region" value="Región Metropolitana" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="addressReference">Referencia</label>
+                                    <label for="addressReference"><i class="fas fa-info-circle"></i> Referencia</label>
                                     <input type="text" id="addressReference" placeholder="Ej: Casa azul, portón café">
                                 </div>
                             </div>
 
                             <div class="delivery-date">
-                                <h3>Fecha y hora de entrega</h3>
-                                <div class="form-row">
+                                <h3 class="section-title">Fecha y hora de entrega</h3>
+                                <div class="form-row location-time">
                                     <div class="form-group">
-                                        <label for="deliveryDate">Fecha preferida *</label>
+                                        <label for="deliveryDate"><i class="far fa-calendar-alt"></i> Fecha preferida *</label>
                                         <input type="date" id="deliveryDate" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="deliveryTime">Horario preferido</label>
+                                        <label for="deliveryTime"><i class="far fa-clock"></i> Horario preferido</label>
                                         <select id="deliveryTime">
                                             <option value="morning">Mañana (09:00 - 12:00)</option>
                                             <option value="afternoon">Tarde (14:00 - 17:00)</option>
@@ -168,7 +169,7 @@
 
                     <!-- Paso 3: Método de pago -->
                     <div class="checkout-step-content" id="step3" style="display: none;">
-                        <h2>Método de Pago</h2>
+                        <h2 class="section-title">Método de Pago</h2>
                         <div class="payment-methods">
                             <label class="payment-method">
                                 <input type="radio" name="paymentMethod" value="card" checked>
@@ -194,24 +195,24 @@
                         </div>
 
                         <div id="cardPayment" class="payment-form">
-                            <h3>Información de la tarjeta</h3>
+                            <h3 class="section-title">Información de la tarjeta</h3>
                             <div class="form-group">
-                                <label for="cardNumber">Número de tarjeta *</label>
-                                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                                <label for="cardNumber"><i class="far fa-credit-card"></i> Número de tarjeta *</label>
+                                <input type="text" id="cardNumber" class="card-input" placeholder="1234 5678 9012 3456" maxlength="19">
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="expiryDate">Fecha de vencimiento *</label>
-                                    <input type="text" id="expiryDate" placeholder="MM/AA" maxlength="5">
+                                    <label for="expiryDate"><i class="far fa-calendar"></i> Fecha de vencimiento *</label>
+                                    <input type="text" id="expiryDate" class="card-input" placeholder="MM/AA" maxlength="5">
                                 </div>
                                 <div class="form-group">
-                                    <label for="cvv">CVV *</label>
-                                    <input type="text" id="cvv" placeholder="123" maxlength="4">
+                                    <label for="cvv"><i class="fas fa-lock"></i> CVV *</label>
+                                    <input type="text" id="cvv" class="card-input" placeholder="123" maxlength="4">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="cardName">Nombre en la tarjeta *</label>
-                                <input type="text" id="cardName" placeholder="Como aparece en la tarjeta">
+                                <label for="cardName"><i class="far fa-user"></i> Nombre en la tarjeta *</label>
+                                <input type="text" id="cardName" class="card-input" placeholder="Como aparece en la tarjeta">
                             </div>
                         </div>
                     </div>
@@ -275,7 +276,7 @@
                 <!-- Resumen del pedido -->
                 <div class="order-summary-section">
                     <div class="order-summary-card">
-                        <h3>Resumen del Pedido</h3>
+                        <h3 class="section-title">Resumen del Pedido</h3>
                         
                         <div class="summary-items" id="summaryItems">
                             <!-- Items del carrito -->
@@ -383,20 +384,18 @@
             const summaryDiscountLine = document.getElementById('summaryDiscountLine');
             const summaryTotal = document.getElementById('summaryTotal');
 
-            // Mostrar items
+            // Mostrar items con imágenes
             summaryItems.innerHTML = cart.map(item => `
                 <div class="summary-item">
+                    <img src="${item.image}" alt="${item.name}" class="summary-item-image">
                     <div class="item-info">
-                        <div class="item-image">
-                            <img src="${item.image}" alt="${item.name}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;">
-                        </div>
-                        <div class="item-text">
-                            <div class="item-name">${item.name}</div>
+                        <div>
+                            <span class="item-name">${item.name}</span>
                             <div class="item-details">Cantidad: ${item.quantity}</div>
-                            ${item.customMessage ? `<div class="item-message">"${item.customMessage}"</div>` : ''}
+                            ${item.message ? `<div class="item-message">${item.message}</div>` : ''}
                         </div>
                     </div>
-                    <div class="item-price">$${(item.price * item.quantity).toLocaleString('es-CL')}</div>
+                    <div class="item-price">$${item.price.toLocaleString('es-CL')}</div>
                 </div>
             `).join('');
 
@@ -636,10 +635,7 @@
                         <h4>Productos</h4>
                         ${orderData.items.map(item => `
                             <div class="order-item">
-                                <div class="order-item-info">
-                                    <img src="${item.image}" alt="${item.name}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;margin-right:10px;">
-                                    <span>${item.name} (x${item.quantity})</span>
-                                </div>
+                                <span>${item.image} ${item.name} (x${item.quantity})</span>
                                 <span>$${(item.price * item.quantity).toLocaleString('es-CL')}</span>
                             </div>
                         `).join('')}

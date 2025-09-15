@@ -79,7 +79,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="specialRequests">Solicitudes especiales</label>
-                                <textarea id="specialRequests" placeholder="Ej: Sin nueces, decoración específica, etc."></textarea>
+                                <textarea id="specialRequests" placeholder="Ej: Sin nueces, decoración específica, etc." rows="4"></textarea>
                             </div>
                         </form>
                     </div>
@@ -387,8 +387,10 @@
             summaryItems.innerHTML = cart.map(item => `
                 <div class="summary-item">
                     <div class="item-info">
-                        <span class="item-emoji">${item.image}</span>
-                        <div>
+                        <div class="item-image">
+                            <img src="${item.image}" alt="${item.name}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;">
+                        </div>
+                        <div class="item-text">
                             <div class="item-name">${item.name}</div>
                             <div class="item-details">Cantidad: ${item.quantity}</div>
                             ${item.customMessage ? `<div class="item-message">"${item.customMessage}"</div>` : ''}
@@ -634,7 +636,10 @@
                         <h4>Productos</h4>
                         ${orderData.items.map(item => `
                             <div class="order-item">
-                                <span>${item.image} ${item.name} (x${item.quantity})</span>
+                                <div class="order-item-info">
+                                    <img src="${item.image}" alt="${item.name}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;margin-right:10px;">
+                                    <span>${item.name} (x${item.quantity})</span>
+                                </div>
                                 <span>$${(item.price * item.quantity).toLocaleString('es-CL')}</span>
                             </div>
                         `).join('')}

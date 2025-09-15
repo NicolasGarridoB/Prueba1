@@ -123,24 +123,47 @@
             const discountInfo = document.getElementById('loginDiscountInfo');
             const errorInfo = document.getElementById('loginErrorInfo');
 
-            // Obtener usuario guardado en localStorage
-            const usuarioGuardado = JSON.parse(localStorage.getItem('usuarioMilSabores'));
-
-            if (usuarioGuardado && email === usuarioGuardado.email && password === usuarioGuardado.password) {
-                // Simulación de login exitoso
-                user = usuarioGuardado;
-                errorInfo.style.display = 'none';
-                discountInfo.innerHTML = '¡Inicio de sesión exitoso! Redirigiendo...';
-                discountInfo.className = 'discount-info success';
-                discountInfo.style.display = 'block';
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 2000);
-            } else {
+            // Obtener usuario guardado en localStorage de forma segura
+            const usuarioGuardadoJson = localStorage.getItem('usuarioMilSabores');
+            if (!usuarioGuardadoJson) {
+                // No hay ningún usuario registrado
                 discountInfo.style.display = 'none';
                 errorInfo.style.display = 'block';
+                errorInfo.textContent = 'No se encontró ningún usuario registrado. Por favor regístrate primero.';
+                console.warn('login: localStorage usuarioMilSabores está vacío');
+                return;
             }
-        }
+
+            let usuarioGuardado = null;
+            try {
+                usuarioGuardado = JSON.parse(usuarioGuardadoJson);
+            } catch (err) {
+                console.error('login: error parseando usuario desde localStorage', err);
+                discountInfo.style.display = 'none';
+                errorInfo.style.display = 'block';
+                errorInfo.textContent = 'Error interno leyendo usuario. Reintenta o borra datos del navegador.';
+                return;
+            }
+
+            // Comparar credenciales
+            if (usuarioGuardado && email === usuarioGuardado.email && password === usuarioGuardado.password) {
+                 // Simulación de login exitoso
+                 user = usuarioGuardado;
+                 errorInfo.style.display = 'none';
+                 discountInfo.innerHTML = '¡Inicio de sesión exitoso! Redirigiendo...';
+                 discountInfo.className = 'discount-info success';
+                 discountInfo.style.display = 'block';
+                 setTimeout(() => {
+                     window.location.href = 'index.html';
+                 }, 2000);
+             } else {
+                // Credenciales incorrectas
+                discountInfo.style.display = 'none';
+                errorInfo.style.display = 'block';
+                errorInfo.textContent = 'Correo o contraseña incorrectos.';
+                console.warn('login: credenciales incorrectas. Usuario guardado:', usuarioGuardado);
+             }
+         }
     </script>
 </body>
 </html>

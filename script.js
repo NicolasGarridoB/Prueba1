@@ -364,7 +364,7 @@ function checkPromoCode() {
 function updateLoginDisplay() {
     const loginBtn = document.getElementById('loginBtn');
     if (loginBtn && user) {
-        loginBtn.textContent = `Hola, ${user.name || user.email}`;
+        loginBtn.textContent = `Cerrar sesión: ${user.name || user.email}`;
         loginBtn.href = '#';
         loginBtn.onclick = (e) => {
             e.preventDefault();

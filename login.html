@@ -13,7 +13,7 @@
         <nav class="navbar">
             <div class="nav-container">
                 <div class="logo">
-                    <h1 class="logo-text">Mil Sabores</h1>
+                    <h1 class="logo-text">🍰 Mil Sabores</h1>
                     <span class="logo-subtitle">50 años de tradición</span>
                 </div>
                 <ul class="nav-menu">
@@ -147,12 +147,24 @@
 
             // Comparar credenciales
             if (usuarioGuardado && email === usuarioGuardado.email && password === usuarioGuardado.password) {
-                 // Simulación de login exitoso
-                 user = usuarioGuardado;
+                 // Simulación de login exitoso - asignar a la variable global
+                 window.user = usuarioGuardado;
+                 
+                 // Actualizar el localStorage con una sesión activa
+                 localStorage.setItem('usuarioLogueado', JSON.stringify(usuarioGuardado));
+                 
                  errorInfo.style.display = 'none';
                  discountInfo.innerHTML = '¡Inicio de sesión exitoso! Redirigiendo...';
                  discountInfo.className = 'discount-info success';
                  discountInfo.style.display = 'block';
+                 
+                 // Actualizar la interfaz de navegación si existe
+                 if (typeof updateLoginDisplay === 'function') {
+                     updateLoginDisplay();
+                 }
+                 
+                 console.log('Usuario logueado exitosamente:', usuarioGuardado);
+                 
                  setTimeout(() => {
                      window.location.href = 'index.html';
                  }, 2000);

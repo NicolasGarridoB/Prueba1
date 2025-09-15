@@ -159,10 +159,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeApp() {
-    renderProducts();
+    console.log('Inicializando aplicación...');
     setupEventListeners();
     loadCartFromStorage();
+    loadUserSession(); // Cargar sesión de usuario
     updateCartDisplay();
+    
+    // Renderizar productos al cargar la página
+    if (document.getElementById('productsGrid')) {
+        renderProducts();
+        console.log('Productos renderizados:', products.length);
+    }
 }
 
 function setupEventListeners() {
@@ -174,13 +181,16 @@ function setupEventListeners() {
         navMenu.classList.toggle('active');
     });
 
-            // Modal de login
-            const loginBtn = document.getElementById('loginBtn');
-            
-            loginBtn?.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.location.href = 'login.html';
-            });    // Cerrar modales
+    // Modal de login
+    const loginBtn = document.getElementById('loginBtn');
+    
+    loginBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'login.html';
+    });
+    
+    // Cerrar modales
+    const closeButtons = document.querySelectorAll('.close');
     closeButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             e.target.closest('.modal').style.display = 'none';
@@ -196,8 +206,10 @@ function setupEventListeners() {
 
     // Filtros de productos
     const filterBtns = document.querySelectorAll('.filter-btn');
+    console.log('Botones de filtro encontrados:', filterBtns.length);
     filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
+            console.log('Filtro clickeado:', btn.dataset.category);
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             filterProducts(btn.dataset.category);
@@ -309,6 +321,9 @@ function handleRegister(e) {
 
     // Guardar usuario en localStorage para que el login pueda verificar credenciales
     localStorage.setItem('usuarioMilSabores', JSON.stringify(user));
+    
+    // También crear sesión activa
+    localStorage.setItem('usuarioLogueado', JSON.stringify(user));
 
     alert('Registro exitoso. ' + (discounts.length > 0 ? 'Descuentos aplicados!' : ''));
     document.getElementById('loginModal').style.display = 'none';
@@ -348,34 +363,55 @@ function checkPromoCode() {
 
 function updateLoginDisplay() {
     const loginBtn = document.getElementById('loginBtn');
-    if (user) {
+    if (loginBtn && user) {
         loginBtn.textContent = `Hola, ${user.name || user.email}`;
-        loginBtn.onclick = logout;
+        loginBtn.href = '#';
+        loginBtn.onclick = (e) => {
+            e.preventDefault();
+            logout();
+        };
+        console.log('Interfaz de login actualizada para usuario:', user.name || user.email);
     }
 }
 
 function logout() {
     user = null;
-    document.getElementById('loginBtn').textContent = 'Iniciar Sesión';
-    document.getElementById('loginBtn').onclick = null;
+    localStorage.removeItem('usuarioLogueado');
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.textContent = 'Iniciar Sesión';
+        loginBtn.href = 'login.html';
+        loginBtn.onclick = null;
+    }
+    console.log('Usuario deslogueado');
     alert('Sesión cerrada');
 }
 
 function renderProducts(productsToRender = products) {
     const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) {
+        console.error('No se encontró el elemento productsGrid');
+        return;
+    }
+    
+    if (productsToRender.length === 0) {
+        productsGrid.innerHTML = '<p style="text-align:center; margin:2rem; font-size:1.2rem;">No hay productos en esta categoría.</p>';
+        return;
+    }
+    
     productsGrid.innerHTML = productsToRender.map(product => `
         <div class="product-card" data-category="${product.category}">
             <div class="product-image">
                 <img src="${product.image}" alt="${product.name}" style="width:100%;height:150px;object-fit:cover;border-radius:8px;">
             </div>
-            <div class="product-content">
+                <div class="product-content">
                 <h3 class="product-name">${product.name}</h3>
                 <p class="product-category">${getCategoryName(product.category)}</p>
                 <p class="product-description">${product.description}</p>
                 <p class="price">$${product.price.toLocaleString('es-CL')} CLP</p>
-                <div style="margin-top:8px; display:flex; gap:8px;">
+                <div class="product-buttons">
                   <button class="view-btn" onclick="event.stopPropagation(); openProductModal('${product.id}')">Ver más</button>
-                  <button class="add-btn" onclick="event.stopPropagation(); addProductById('${product.id}')">Agregar al carrito</button>
+                  <button class="add-btn" onclick="event.stopPropagation(); addProductById('${product.id}')">Agregar</button>
                 </div>
             </div>
         </div>
@@ -410,34 +446,6 @@ function addProductToCart(productId) {
     alert('Producto agregado al carrito');
 }
 
-function renderProductos(productosFiltrados) {
-  const grid = document.getElementById('productsGrid');
-  grid.innerHTML = '';
-  if (productosFiltrados.length === 0) {
-    grid.innerHTML = '<p>No hay productos en esta categoría.</p>';
-    return;
-  }
-  productosFiltrados.forEach(producto => {
-    const div = document.createElement('div');
-    div.className = 'product-card';
-    div.innerHTML = `
-      <div class="product-image">
-        <img src="${producto.imagen}" alt="${producto.nombre}" style="width:100%;height:150px;object-fit:cover;border-radius:8px 8px 0 0;">
-      </div>
-      <div class="product-card-content">
-        <h3 class="product-name">${producto.nombre}</h3>
-        <p class="price">${producto.precio}</p>
-        <p class="desc">${producto.descripcion}</p>
-        <div style="margin-top:8px; display:flex; gap:8px;">
-            <button class="view-btn" onclick="openProductModal('${producto.id}')">Ver más</button>
-            <button class="add-btn" onclick="addProductById('${producto.id}')">Agregar al carrito</button>
-        </div>
-      </div>
-    `;
-    grid.appendChild(div);
-  });
-}
-
 function getCategoryName(category) {
     const categoryNames = {
         'tortas-cuadradas': 'Tortas Cuadradas',
@@ -453,31 +461,21 @@ function getCategoryName(category) {
 }
 
 function filterProducts(category) {
+    console.log('Filtrando por categoría:', category);
+    console.log('Productos disponibles:', products.length);
+    
     if (category === 'all') {
+        console.log('Mostrando todos los productos');
         renderProducts(products);
     } else {
         const filtered = products.filter(product => product.category === category);
+        console.log('Productos filtrados:', filtered.length);
         renderProducts(filtered);
-    }
-}
-
-// Filtrar productos por categoría
-function filtrarPorCategoria(categoria) {
-    if (categoria === 'all') {
-        renderProducts(products);
-    } else {
-        const filtrados = products.filter(p => p.category === categoria);
-        renderProducts(filtrados);
     }
 }
 
 // Evento para los botones de filtro
 // (Los listeners de filtro se agregan en setupEventListeners)
-
-// Mostrar todos los productos al cargar
-window.addEventListener('DOMContentLoaded', () => {
-    renderProducts(products);
-});
 
 // Búsqueda
 function searchProducts(query) {
@@ -496,37 +494,25 @@ function searchProducts(query) {
 }
 
         function openProductModal(productId) {
-                    currentProduct = products.find(p => p.id === productId);
+            currentProduct = products.find(p => p.id === productId);
             if (!currentProduct) return;
 
-            // En lugar de abrir modal, redirigir a una página de producto individual
-            // o mostrar información inline
-            alert(`Producto: ${currentProduct.name}\nPrecio: $${currentProduct.price.toLocaleString('es-CL')}\n\n${currentProduct.description}\n\nRedirigiendo a carrito...`);
+            // Llenar el modal con la información del producto
+            document.getElementById('modalProductName').textContent = currentProduct.name;
+            document.getElementById('modalProductPrice').textContent = `$${currentProduct.price.toLocaleString('es-CL')} CLP`;
+            document.getElementById('modalProductDescription').textContent = currentProduct.description;
+            document.getElementById('modalProductImage').src = currentProduct.image;
+            document.getElementById('modalProductImage').alt = currentProduct.name;
             
-            // Agregar directamente al carrito
-            const cartItem = {
-                id: currentProduct.id,
-                name: currentProduct.name,
-                price: currentProduct.price,
-                quantity: 1,
-                customMessage: '',
-                image: currentProduct.image
-            };
-
-            const existingItemIndex = cart.findIndex(item => item.id === cartItem.id);
-            if (existingItemIndex > -1) {
-                cart[existingItemIndex].quantity += 1;
-            } else {
-                cart.push(cartItem);
-            }
-
-            updateCartDisplay();
-            saveCartToStorage();
+            // Resetear los valores del modal
+            document.getElementById('quantity').value = 1;
+            document.getElementById('customMessage').value = '';
             
-            if (confirm('Producto agregado al carrito. ¿Deseas ir al carrito?')) {
-                window.location.href = 'carrito.html';
-            }
-        }function changeQuantity(change) {
+            // Mostrar el modal
+            document.getElementById('productModal').style.display = 'block';
+        }
+        
+function changeQuantity(change) {
     const quantityInput = document.getElementById('quantity');
     const currentValue = parseInt(quantityInput.value);
     const newValue = Math.max(1, currentValue + change);
@@ -591,6 +577,20 @@ function loadCartFromStorage() {
     } catch (err) {
         console.warn('No se pudo cargar el carrito desde localStorage', err);
         cart = [];
+    }
+}
+
+function loadUserSession() {
+    try {
+        const savedUser = localStorage.getItem('usuarioLogueado');
+        if (savedUser) {
+            user = JSON.parse(savedUser);
+            console.log('Sesión de usuario cargada:', user);
+            updateLoginDisplay();
+        }
+    } catch (err) {
+        console.warn('No se pudo cargar la sesión de usuario', err);
+        user = null;
     }
 }
 

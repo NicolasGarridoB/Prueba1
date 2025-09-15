@@ -13,7 +13,7 @@
         <nav class="navbar">
             <div class="nav-container">
                 <div class="logo">
-                    <h1 class="logo-text">Mil Sabores</h1>
+                    <h1 class="logo-text">🍰 Mil Sabores</h1>
                     <span class="logo-subtitle">50 años de tradición</span>
                 </div>
                 <ul class="nav-menu">
@@ -386,7 +386,9 @@
             
             container.innerHTML = recommended.map(product => `
                 <div class="recommended-product" onclick="addRecommendedToCart('${product.id}')">
-                    <div class="recommended-image">${product.image}</div>
+                    <div class="recommended-image">
+                        <img src="${product.image}" alt="${product.name}">
+                    </div>
                     <h4>${product.name}</h4>
                     <p class="recommended-price">$${product.price.toLocaleString('es-CL')}</p>
                     <button class="add-recommended-btn">

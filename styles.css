@@ -233,14 +233,20 @@ body {
     cursor: pointer;
 }
 
-.recommended-product .recommended-image img,
 .recommended-product .recommended-image {
-    display: block;
     width: 100%;
     height: 110px;
+    margin-bottom: 0.6rem;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.recommended-product .recommended-image img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     border-radius: 8px;
-    margin-bottom: 0.6rem;
+    display: block;
 }
 
 .recommended-product h4 { font-size: 0.95rem; margin: 0.2rem 0; }
@@ -510,6 +516,47 @@ body {
     background-color: #6d3410;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+/* Botones de producto */
+.product-buttons {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.view-btn, .add-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    flex: 1;
+}
+
+.view-btn {
+    background-color: var(--accent-pink);
+    color: var(--white);
+}
+
+.view-btn:hover {
+    background-color: #d4849c;
+    transform: translateY(-1px);
+}
+
+.add-btn {
+    background-color: var(--accent-chocolate);
+    color: var(--white);
+}
+
+.add-btn:hover {
+    background-color: #6d3410;
+    transform: translateY(-1px);
 }
 
 /* Modal de Producto */
@@ -1471,8 +1518,19 @@ body {
 }
 
 .recommended-image {
-    font-size: 3rem;
+    width: 100%;
+    height: 120px;
     margin-bottom: 0.5rem;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.recommended-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
 }
 
 .recommended-price {
